@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-width=device-scale">
+  <title>Todo App - Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="dashboard active">
+    <header class="dashboard-header">
+      <div class="header-left">
+        <div class="dashboard-logo"><span class="accent">Todo</span>App</div>
+      </div>
+      <div class="header-right">
+        <button class="btn-theme" id="themeBtn" title="Change Theme">
+          <i class="fas fa-palette"></i>
+        </button>
+        <div class="theme-picker" id="themePicker">
+          <div class="theme-option" data-theme="neon-green" style="--theme:#00ff88">
+            <span class="theme-dot"></span>Neon Green
+          </div>
+          <div class="theme-option" data-theme="cyber-purple" style="--theme:#a855f7">
+            <span class="theme-dot"></span>Cyber Purple
+          </div>
+          <div class="theme-option" data-theme="ocean-blue" style="--theme:#0ea5e9">
+            <span class="theme-dot"></span>Ocean Blue
+          </div>
+          <div class="theme-option" data-theme="sunset-orange" style="--theme:#f97316">
+            <span class="theme-dot"></span>Sunset Orange
+          </div>
+          <div class="theme-option" data-theme="rose-pink" style="--theme:#f43f5e">
+            <span class="theme-dot"></span>Rose Pink
+          </div>
+          <div class="theme-option" data-theme="gold-premium" style="--theme:#fbbf24">
+            <span class="theme-dot"></span>Gold Premium
+          </div>
+        </div>
+        <div class="user-info">
+          <span class="user-email" id="userEmail"></span>
+          <button class="btn-logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </div>
+    </header>
+    
+    <main class="dashboard-content">
+      <div class="stats-bar">
+        <div class="stat-card">
+          <span class="stat-icon"><i class="fas fa-list"></i></span>
+          <div class="stat-info">
+            <span class="stat-label">Total</span>
+            <span class="stat-value" id="totalCount">0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon pending"><i class="fas fa-clock"></i></span>
+          <div class="stat-info">
+            <span class="stat-label">Pending</span>
+            <span class="stat-value" id="pendingCount">0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon completed"><i class="fas fa-check-circle"></i></span>
+          <div class="stat-info">
+            <span class="stat-label">Done</span>
+            <span class="stat-value" id="completedCount">0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon high"><i class="fas fa-fire"></i></span>
+          <div class="stat-info">
+            <span class="stat-label">High Priority</span>
+            <span class="stat-value" id="highPriorityCount">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-tabs">
+        <button class="filter-btn active" data-filter="all">
+          <i class="fas fa-layer-group"></i> All
+        </button>
+        <button class="filter-btn" data-filter="pending">
+          <i class="fas fa-spinner"></i> Pending
+        </button>
+        <button class="filter-btn" data-filter="completed">
+          <i class="fas fa-check-double"></i> Completed
+        </button>
+      </div>
+
+      <div class="todo-input-section">
+        <div class="input-row">
+          <input type="text" class="todo-input" id="todoInput" placeholder="Task title (headline)">
+          <select class="priority-select" id="prioritySelect">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div class="input-row">
+          <textarea class="todo-notes" id="todoNotes" placeholder="Add detailed notes... (optional)"></textarea>
+        </div>
+        <div class="input-row-2">
+          <div class="date-time-picker">
+            <input type="date" id="dueDate" class="date-input">
+            <input type="time" id="dueTime" class="time-input">
+          </div>
+          <label class="reminder-toggle">
+            <input type="checkbox" id="reminderCheck">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label"><i class="fas fa-bell"></i> Reminder</span>
+          </label>
+          <button class="btn-add" id="addBtn">
+            <i class="fas fa-plus"></i> Add Task
+          </button>
+        </div>
+      </div>
+      
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <span>Loading your tasks...</span>
+      </div>
+      
+      <div class="todo-list" id="todoList"></div>
+      
+      <div class="empty-state" id="emptyState">
+        <div class="empty-illustration">
+          <i class="fas fa-clipboard-list"></i>
+        </div>
+        <h3>No tasks found</h3>
+        <p id="emptyMessage">Add your first task above!</p>
+      </div>
+    </main>
+  </div>
+
+  <div class="edit-modal" id="editModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Task</h3>
+        <button class="modal-close" id="closeModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editTodoId">
+        <div class="form-group">
+          <label>Task Title</label>
+          <input type="text" id="editTodoText" class="form-input">
+        </div>
+        <div class="form-group">
+          <label>Notes / Description</label>
+          <textarea id="editTodoNotes" class="form-input" rows="3" placeholder="Add detailed notes..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Priority</label>
+          <select id="editPriority" class="form-input">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Due Date</label>
+            <input type="date" id="editDueDate" class="form-input">
+          </div>
+          <div class="form-group">
+            <label>Due Time</label>
+            <input type="time" id="editDueTime" class="form-input">
+          </div>
+        </div>
+        <label class="reminder-toggle">
+          <input type="checkbox" id="editReminder">
+          <span class="toggle-slider"></span>
+          <span class="toggle-label"><i class="fas fa-bell"></i> Reminder</span>
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="cancelEdit">Cancel</button>
+        <button class="btn-save" id="saveEdit">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
